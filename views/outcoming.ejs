@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Вывод средств</title>
+  <!-- Bootstrap core CSS-->
+  <link href="/all/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="/all/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="/all/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="/all/css/sb-admin.css" rel="stylesheet">
+  <link href="/all/css/custom.css" rel="stylesheet">
+</head>
+
+<body class="fixed-nav sticky-footer bg-light" id="page-top">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="mainNav">
+    <a href="personal" class="navbar-brand"><img src="/all/img/small_logo.png" style="height: 38px; width: 57px">Private GO</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Основное" style="margin-top: 3vh;">
+          <a class="nav-link" href="personal">
+            <i class="fa fa-fw fa-info"></i>
+            <span class="nav-link-text">Информация</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Внести средства">
+          <a class="nav-link" href="incoming">
+            <i class="fa fa-fw fa-btc"></i>
+            <span class="nav-link-text">Внести средства</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Вывод средств">
+          <a class="nav-link" href="outcoming">
+            <i class="fa fa-fw fa-usd"></i>
+            <span class="nav-link-text">Вывод средств</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Вывод средств">
+          <a class="nav-link" href="settings">
+            <i class="fa fa-fw fa-cog"></i>
+            <span class="nav-link-text">Настройки</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+            <i class="fa fa-fw fa-sign-out"></i>Выход</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-11 col-sm-offset-3">
+          <h3 style="margin-bottom: 5vh;">Отправить заявку на вывод средств</h3>
+
+          <form role="form" id="contactForm" style="margin-left: 5vh;">
+              <div class="row" >
+                <div class="form-group col-sm-6">
+                  <label for="name" class="h4">Введите имя</label>
+                  <input type="text" class="form-control" id="name" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="email" class="h4">Электронная почта</label>
+                  <input type="email" class="form-control" id="email" placeholder="Ваш E-mail" required>
+                </div>
+              </div>
+            <div class="form-group">
+              <label for="message" class="h4 ">Тема</label>
+              <textarea id="theme" class="form-control" rows="1" placeholder="Тема письма" required></textarea>
+            </div>
+              <div class="form-group">
+                <label for="message" class="h4 ">Ваше сообщение</label>
+                <textarea id="message" class="form-control" rows="5" placeholder="Текст сообщения" required></textarea>
+              </div>
+              <button type="submit" id="form-submit" class="btn btn-primary btn-lg pull-right ">Отправить</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © Your Website 2017</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Вы уверены?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="cursor: pointer;">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Нажмите "Выход", если вы готовы завершить текущую сессию.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+            <form action="logout" method="get" style="all: unset;">
+              <button type="submit" class="btn btn-primary " style="cursor: pointer;"><span style="cursor: pointer;">Выход</span></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="/all/vendor/jquery/jquery.min.js"></script>
+    <script src="/all/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="/all/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="/all/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="/all/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="/all/js/sb-admin.min.js"></script>
+    <!-- Custom scripts for this page-->
+    <script src="/all/js/sb-admin-datatables.min.js"></script>
+
+  </div>
+</body>
+
+</html>

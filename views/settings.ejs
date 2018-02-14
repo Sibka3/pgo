@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Настройки</title>
+    <!-- Bootstrap core CSS-->
+    <link href="/all/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="/all/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="/all/css/sb-admin.css" rel="stylesheet">
+    <link href="/all/css/custom.css" rel="stylesheet">
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="mainNav">
+    <a href="personal" class="navbar-brand"><img src="/all/img/small_logo.png" style="height: 38px; width: 57px">Private GO</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Основное" style="margin-top: 3vh;">
+                <a class="nav-link" href="personal">
+                    <i class="fa fa-fw fa-info"></i>
+                    <span class="nav-link-text">Информация</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Внести средства">
+                <a class="nav-link" href="incoming">
+                    <i class="fa fa-fw fa-btc"></i>
+                    <span class="nav-link-text">Внести средства</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Вывод средств">
+                <a class="nav-link" href="outcoming">
+                    <i class="fa fa-fw fa-usd"></i>
+                    <span class="nav-link-text">Вывод средств</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Вывод средств">
+                <a class="nav-link" href="settings">
+                    <i class="fa fa-fw fa-cog"></i>
+                    <span class="nav-link-text">Настройки</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav sidenav-toggler">
+            <li class="nav-item">
+                <a class="nav-link text-center" id="sidenavToggler">
+                    <i class="fa fa-fw fa-angle-left"></i>
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                    <i class="fa fa-fw fa-sign-out"></i>Выход</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<!-- mail pswd koshelek firstname lastname -->
+<div class="content-wrapper">
+    <div class="container-fluid" style="margin-top: 3vh;">
+        <form action="change_name" method="post">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-2">
+                        <label for="first_name">Имя</label>
+                        <input class="form-control" name="first_name" id="first_name" type="text" placeholder="Имя">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="last_name">Фамилия</label>
+                        <input class="form-control" name="last_name" id="last_name" type="text" placeholder="Фамилия">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Изменить</span></button>
+                </div>
+            </div>
+        </form>
+        <script>
+          var getTemp = 0;
+          getTemp = <%= message %>;
+          if(getTemp===1){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Введите email!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===2){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Такой id не существует!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===3){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Такой email уже занят!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===4){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Email успешно изменен!<\/strong>');
+            document.write('<\/div>');
+          }
+        </script>
+        <form action="change_email" method="post">
+            <div class="form-group" style="margin-top: 2vh;">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="email">Новый E-mail</label>
+                        <input class="form-control" name="email" id="email" type="text" placeholder="Новый E-mail">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Изменить</span></button>
+                </div>
+            </div>
+        </form>
+        <form action="change_pswd" method="post">
+            <div class="form-group" style="margin-top: 2vh;">
+                <div class="form-row">
+                    <div class="col-md-2">
+                        <label for="old_pswd">Старый пароль</label>
+                        <input class="form-control" name="old_pswd" id="old_pswd" type="text" placeholder="Старый пароль">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="new_pswd">Новый пароль</label>
+                        <input class="form-control" name="new_pswd" id="new_pswd" type="text" placeholder="Новый пароль">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Изменить</span></button>
+                </div>
+            </div>
+        </form>
+
+        <div class="form-group" style="margin-top: 2vh;">
+            <form action="add_wallet" method="post">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="number1">Добавить кошелек</label>
+                        <input class="form-control" id="number1" type="text" placeholder="Номер кошелька">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Добавить</span></button>
+                </div>
+            </form>
+            <div class="form-row">
+                     <div class=" col-md-3 dropdown">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="margin-top: 10%; padding: .35rem .7rem;  cursor: pointer; ">
+                           Ваши кошельки
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form action="delete_wallet" method="post">
+                                <a class="dropdown-item" href="#">53125362163126312353213521</a>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-top: -30px; padding-right: 4px; outline: none;">
+                                    <span aria-hidden="true" style="cursor: pointer;">×</span>
+                                </button>
+                            </form>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </form>
+        </form>
+    </div>
+</div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+        <div class="container">
+            <div class="text-center">
+                <small>Copyright © Your Website 2017</small>
+            </div>
+        </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Вы уверены?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="cursor: pointer;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Нажмите "Выход", если вы готовы завершить текущую сессию.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Отмена</button>
+                    <form action="logout" method="get" style="all: unset;">
+                        <button type="submit" class="btn btn-primary" style="cursor: pointer;"><span style="cursor: pointer;">Выход</span></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="/all/vendor/jquery/jquery.min.js"></script>
+    <script src="/all/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="/all/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+</div>
+</body>
+
+</html>

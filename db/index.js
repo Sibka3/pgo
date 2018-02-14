@@ -1,1 +1,1 @@
-exports.users = require('./users');
+exports.tables = require('./tables');

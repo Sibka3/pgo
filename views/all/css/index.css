@@ -1,0 +1,182 @@
+/* your styles go here */
+
+.testimonials .section{
+    padding: 0px;
+}
+
+.scrollUp {
+    -webkit-transform: translateY(-105%);
+    transform: translateY(-105%);
+}
+
+.navbar{
+    height: 80px !important;
+}
+
+.navbar.fixed-top.navbar-expand-lg{
+    background-color: rgb(245, 245, 245, 0);
+
+   /* background: radial-gradient(circle farthest-corner at 100px 20px, #fff, #db0700);*/
+    transition: all 0.5s;
+}
+
+.navbar.fixed-top{
+    background-color: #fff0;
+    box-shadow: none;
+    transition: all 0.5s;
+}
+
+.navbar-collapse.collapsing{
+    background-color: #ffffff;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s;
+}
+
+.navbar-collapse.collapse.show{
+    background-color: #ffffff;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav .nav-link{
+    padding-left: 15px;
+}
+
+.hero .fp-tableCell{
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.feat .fp-tableCell{
+    /* background: radial-gradient(circle farthest-corner at 50% 120px, #fff, #5252db);*/
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.brows .fp-tableCell{
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.about .fp-tableCell{
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.mytestim .fp-tableCell{
+    /* background: radial-gradient(circle farthest-corner at 50% 120px, #fff, #5252db);*/
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.contacts .fp-tableCell{
+    vertical-align: bottom !important;
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+.extra-features .lead{
+    font-weight: 700;
+}
+
+.extra-features h2{
+    font-size: 2.5rem;
+}
+
+#pgo{
+    margin-top: 10%;
+}
+
+#pgo_logo{
+    margin-top: 10%;
+}
+
+body.fp-viewing-0.modal-open{
+    padding-right: 0 !important;
+}
+
+body.fp-viewing-1, .fp-viewing-2, .fp-viewing-3, .fp-viewing-4, .fp-viewing-5, .fp-viewing-6{
+    padding-right: 0 !important;
+}
+
+button.navbar-toggler.navbar-toggler-right.active{
+    margin-right: 0 !important;
+}
+
+nav.navbar.fixed-top{
+    padding-right: 40px !important;
+}
+
+body.fp-viewing-2.modal-open{
+    padding-right: 0 !important;
+}
+
+.fp-tableCell{
+    border-bottom: 1px dashed black;
+}
+
+.row.mycontacts{
+    display: block;
+}
+
+.container.mycontacts1{
+    position: relative;
+    top: 340px;
+    margin-left: 70px;
+}
+
+@media (max-width: 800px) {
+    .container.mycontacts1 {
+        top: 0;
+    }
+}
+
+footer.main-footer .copyrights{
+    margin-top: 0 !important;
+}
+
+footer.main-footer .copyrights .container {
+    padding: 20px 0;
+    border-top: none !important;
+}
+
+/*.contacts{*/
+    /*background-image: -webkit-gradient(linear, left top, right top, from(#5855b2), to(#FFDA63));*/
+    /*background-image: linear-gradient(to bottom, #5855b2, #FFDA63);*/
+/*}*/
+
+.contacts .list-unstyled, h3{
+    color: black;
+}
+
+#map {
+    position: relative;
+    height: 300px;
+    width: 60%;
+    left: 32.3%;
+    box-shadow: 3px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.mytestim .item{
+    background-color: #e9e9e9;
+    border-radius: 15%;
+}
+
+@media (max-width: 1000px) {
+    #map {
+        display: none;
+    }
+    .navbar-brand {
+        display: none;
+    }
+    #pgo_logo{
+        margin-top: 20%;
+    }
+}
+
+#poloska{
+    border-bottom: 1px solid #424242;
+}
+
+a:active{
+    color: #000000;
+}
+
+.form-check-input.check{
+    margin-right: 5px !important;
+    display: inline !important;
+    width: auto !important;
+}

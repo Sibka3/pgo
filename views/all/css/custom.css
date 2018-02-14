@@ -1,0 +1,13 @@
+nav.navbar.bg-dark .navbar-brand{
+    color: #a4a4a4;
+}
+
+#changecolor{
+    margin-top: 42vh;
+}
+
+@media (max-width: 992px){
+    #changecolor{
+        margin-top: 1vh;
+    }
+}

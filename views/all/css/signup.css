@@ -1,0 +1,110 @@
+body {
+    padding-top: 80px;
+    position: relative;
+    overflow-x: hidden;
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+    height: 100vh;
+}
+
+.navbar{
+    height: 80px !important;
+}
+
+.navbar.fixed-top.navbar-expand-lg{
+    background-color: rgba(255, 218, 99, 0);
+    transition: all 0.5s;
+}
+
+.navbar.fixed-top{
+    background-color: #fff0;
+    box-shadow: none;
+    transition: all 0.5s;
+}
+
+.navbar-collapse.collapsing{
+    background-color: rgb(255, 218, 99);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s;
+}
+
+.navbar-collapse.collapse.show{
+    background-color: #FFDA63;
+}
+
+.signin-page.account{
+    position: relative;
+    top: 25%;
+}
+
+.signin-page.account .create{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.already_reg{
+    margin-top: 5px;
+}
+
+.register_btn{
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+#register_bttn{
+    display: block;
+    color: #fff;
+    background-color: #5855b2;
+}
+
+#register_btn:hover {
+    color: #fff;
+    background-color: #5855b2;
+}
+
+#register_btn:focus, #register_btn.focus {
+    -webkit-box-shadow: 0 0 0 3px rgba(89, 137, 229, 0.5);
+    box-shadow: 0 0 0 3px rgba(89, 137, 229, 0.5);
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #737373;
+}
+
+.container.mycontacts1{
+    position: relative;
+    top: 30px;
+    margin-left: 5vw;
+}
+
+.signin{
+    height: 100%;
+}
+
+.contacts{
+    background: linear-gradient(45deg, #ffffff, #ffffff);
+}
+
+#footcont{
+    height: 10%;
+}
+
+footer.main-footer .copyrights{
+    margin-top: 0 !important;
+}
+
+footer.main-footer .copyrights .container {
+    padding: 20px 0;
+    border-top: none !important;
+}
+
+#poloska{
+    border-bottom: 1px solid #424242;
+}
+
+.contacts .list-unstyled, h3{
+    color: black;
+}
