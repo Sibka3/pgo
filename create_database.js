@@ -6,9 +6,9 @@ var mysql = require('mysql');
 var dbconfig = require('./db/database')
 var connection = mysql.createConnection(dbconfig.connection);
 
-connection.query('DROP DATABASE ' + dbconfig.database);
+//connection.query('DROP DATABASE ' + dbconfig.database);
 
-connection.query('CREATE DATABASE ' + dbconfig.database);
+connection.query("CREATE DATABASE " + dbconfig.database + " DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;");
 
 connection.query('USE ' + dbconfig.database);
 

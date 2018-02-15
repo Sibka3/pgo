@@ -60,6 +60,9 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
+              <a class="nav-link text-center" href="settings"><%= user %></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
                     <i class="fa fa-fw fa-sign-out"></i>Выход</a>
             </li>
@@ -71,6 +74,30 @@
 <!-- mail pswd koshelek firstname lastname -->
 <div class="content-wrapper">
     <div class="container-fluid" style="margin-top: 3vh;">
+        <script>
+          var getTemp = 0;
+          getTemp = <%= message %>;
+          if(getTemp===5){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Такой id не существует!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===7){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Имя успешно изменено!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===8){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Фамилия успешно изменена!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===9){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Имя и фамилия успешно изменены!<\/strong>');
+            document.write('<\/div>');
+          }
+        </script>
         <form action="change_name" method="post">
             <div class="form-group">
                 <div class="form-row">
@@ -126,11 +153,11 @@
                 <div class="form-row">
                     <div class="col-md-2">
                         <label for="old_pswd">Старый пароль</label>
-                        <input class="form-control" name="old_pswd" id="old_pswd" type="text" placeholder="Старый пароль">
+                        <input class="form-control" name="old_pswd" id="old_pswd" type="password" placeholder="Старый пароль">
                     </div>
                     <div class="col-md-2">
                         <label for="new_pswd">Новый пароль</label>
-                        <input class="form-control" name="new_pswd" id="new_pswd" type="text" placeholder="Новый пароль">
+                        <input class="form-control" name="new_pswd" id="new_pswd" type="password" placeholder="Новый пароль">
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Изменить</span></button>
                 </div>

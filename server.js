@@ -79,32 +79,40 @@ app.get('/',
 app.get('/personal',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('personal');
+    //req.session.regenerate(function(err){});
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      res.render('personal', {user:us});
+    });
   });
 
 app.get('/outcoming',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('outcoming');
+    //req.session.regenerate(function(err){});
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      res.render('outcoming', {user:us});
+    });
   });
 
 app.get('/incoming',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('incoming');
+    //req.session.regenerate(function(err){});
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      res.render('incoming', {user:us});
+    });
   });
 
 app.get('/settings',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    var code=req.body.code;
-    if(!req.body.code)
-      code=0;
-    res.render('settings', {message:code});
+    //req.session.regenerate(function(err){});
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      var code=req.body.code;
+      if(!req.body.code)
+        code=0;
+      res.render('settings', {user:us, message:code});
+    });
   });
 
 app.get('/forgot-password',
@@ -150,27 +158,32 @@ app.get('/index',
 app.post('/change_name',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    console.log(req.session);
-    req.session.regenerate(function(err){});
-    res.render('settings', {message:0});
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      db.tables.changeName(req.body.first_name, req.body.last_name, req.session.passport.user, function(err, user){
+        if(err){
+          console.log(err);
+          res.render('settings', {user:us, message:0});
+        }
+        else {
+          res.render('settings', {user:us, message:user});
+        }
+      });
+    });
   });
 
 app.post('/change_email',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    db.tables.changeEmail(req.body.email, req.session.passport.user, function(err, user){
-      if(user==='1'){
-        res.render('settings', {message:1}); //емейл пустой
-      }
-      else if(user==='2'){
-        res.render('settings', {message:2}); //Что-то пошло не так, id не существует
-      }
-      else if(user==='3'){
-        res.render('settings', {message:3}); //Такой емейл уже есть в базе
-      }
-      else if(user==='4'){
-        res.render('settings', {message:4});
-      }
+    db.tables.displayUser(req.session.passport.user,function (err, us) {
+      db.tables.changeEmail(req.body.email, req.session.passport.user, function(err, user){
+        if(err){
+          console.log(err);
+          res.render('settings', {user:us, message:0});
+        }
+        else {
+          res.render('settings', {user:us, message:user});
+        }
+      });
     });
   });
 
