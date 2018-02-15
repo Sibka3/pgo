@@ -15,6 +15,7 @@
     <!-- Custom styles for this template-->
     <link href="/all/css/sb-admin.css" rel="stylesheet">
     <link href="/all/css/custom.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/all/img/logo1.ico">
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -60,7 +61,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link text-center" href="settings" style="text-transform: capitalize;"><%= user %></a>
+              <a class="nav-link text-center" href="settings" ><%= user %></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
@@ -142,18 +143,42 @@
                 <div class="form-row">
                     <div class="col-md-4">
                         <label for="email">Новый E-mail</label>
-                        <input class="form-control" name="email" id="email" type="text" placeholder="Новый E-mail">
+                        <input class="form-control" name="email" id="email" type="email" placeholder="Новый E-mail">
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Изменить</span></button>
                 </div>
             </div>
         </form>
+        <script>
+          var getTemp = 0;
+          getTemp = <%= message %>;
+          if(getTemp===10){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Введите текущий пароль!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===11){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Введите новый пароль!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===12){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Неверный текущий пароль !<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===13){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Пароль успешно изменен!<\/strong>');
+            document.write('<\/div>');
+          }
+        </script>
         <form action="change_pswd" method="post">
             <div class="form-group" style="margin-top: 2vh;">
                 <div class="form-row">
                     <div class="col-md-2">
-                        <label for="old_pswd">Старый пароль</label>
-                        <input class="form-control" name="old_pswd" id="old_pswd" type="password" placeholder="Старый пароль">
+                        <label for="old_pswd">Текущий пароль</label>
+                        <input class="form-control" name="old_pswd" id="old_pswd" type="password" placeholder="Текущий пароль">
                     </div>
                     <div class="col-md-2">
                         <label for="new_pswd">Новый пароль</label>
@@ -163,13 +188,26 @@
                 </div>
             </div>
         </form>
-
+        <script>
+          var getTemp = 0;
+          getTemp = <%= message %>;
+          if(getTemp===16){
+            document.write('<div class="alert alert-danger">');
+            document.write('<strong>Кошелек уже есть в системе!<\/strong>');
+            document.write('<\/div>');
+          }
+          else if(getTemp===17){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Успешно!<\/strong>');
+            document.write('<\/div>');
+          }
+        </script>
         <div class="form-group" style="margin-top: 2vh;">
             <form action="add_wallet" method="post">
                 <div class="form-row">
                     <div class="col-md-4">
                         <label for="number1">Добавить кошелек</label>
-                        <input class="form-control" id="number1" type="text" placeholder="Номер кошелька">
+                        <input class="form-control" id="number1" name="wallet" type="text" placeholder="Номер кошелька">
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Добавить</span></button>
                 </div>
@@ -181,10 +219,14 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form action="delete_wallet" method="post">
-                                <a class="dropdown-item" href="#">53125362163126312353213521</a>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-top: -30px; padding-right: 4px; outline: none;">
-                                    <span aria-hidden="true" style="cursor: pointer;">×</span>
-                                </button>
+                                <script>
+                                    <%for(var i=0;i< wallet.length;i++){%>
+                                        document.write('<a class="dropdown-item" href="#"><%= wallet[i].btcwallet_address %><\/a>');
+                                        document.write('<button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-top: -30px; padding-right: 4px; outline: none;">');
+                                        document.write('<span aria-hidden="true" style="cursor: pointer;">×<\/span>');
+                                        document.write('<\/button>');
+                                    <%}%>
+                                </script>
                             </form>
                         </div>
                      </div>

@@ -108,10 +108,12 @@ app.get('/settings',
   function(req, res){
     //req.session.regenerate(function(err){});
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      var code=req.body.code;
-      if(!req.body.code)
-        code=0;
-      res.render('settings', {user:us, message:code});
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        var code=req.body.code;
+        if(!req.body.code)
+          code=0;
+        res.render('settings', {user:us, message:code, wallet:us1});
+      });
     });
   });
 
@@ -159,14 +161,16 @@ app.post('/change_name',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      db.tables.changeName(req.body.first_name, req.body.last_name, req.session.passport.user, function(err, user){
-        if(err){
-          console.log(err);
-          res.render('settings', {user:us, message:0});
-        }
-        else {
-          res.render('settings', {user:us, message:user});
-        }
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        db.tables.changeName(req.body.first_name, req.body.last_name, req.session.passport.user, function(err, user){
+          if(err){
+            console.log(err);
+            res.render('settings', {user:us, message:0});
+          }
+          else {
+            res.render('settings', {user:us, message:user, wallet:us1});
+          }
+        });
       });
     });
   });
@@ -175,14 +179,16 @@ app.post('/change_email',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      db.tables.changeEmail(req.body.email, req.session.passport.user, function(err, user){
-        if(err){
-          console.log(err);
-          res.render('settings', {user:us, message:0});
-        }
-        else {
-          res.render('settings', {user:us, message:user});
-        }
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        db.tables.changeEmail(req.body.email, req.session.passport.user, function(err, user){
+          if(err){
+            console.log(err);
+            res.render('settings', {user:us, message:0});
+          }
+          else {
+            res.render('settings', {user:us, message:user, wallet:us1});
+          }
+        });
       });
     });
   });
@@ -190,15 +196,37 @@ app.post('/change_email',
 app.post('/change_pswd',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('settings', {message:0});
+    db.tables.displayUser(req.session.passport.user, function (err, us) {
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        db.tables.changePassword(req.body.old_pswd, req.body.new_pswd, req.session.passport.user, function(err, user){
+          if(err){
+            console.log(err);
+            res.render('settings', {user:us, message:0});
+          }
+          else {
+            res.render('settings', {user:us, message:user, wallet:us1});
+          }
+        });
+      });
+    });
   });
 
 app.post('/add_wallet',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('settings', {message:0});
+    db.tables.displayUser(req.session.passport.user, function (err, us) {
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        db.tables.addBtcWallet(req.body.wallet, req.session.passport.user, function(err, user){
+          if(err){
+            console.log(err);
+            res.render('settings', {user:us, message:0});
+          }
+          else {
+            res.render('settings', {user:us, message:user, wallet:us1});
+          }
+        });
+      });
+    });
   });
 
 app.post('/delete_wallet',

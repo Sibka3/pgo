@@ -16,17 +16,17 @@ module.exports = {
     		'password':'user_pass_hash',
             'user_type':'user_type'
     	},
-    	'users_to_btcwallets':{
-    		'table_name':'users_to_btcwallets',
-    		'user_id':'user_id',
-    		'btcwallet_id':'btcwallet_id'
-    	},
-    	'btcwallets':{
-    		'table_name':'btcwallets',
-    		'btcwallet_id':'btcwallet_id',
-    		'btcwallet_address':'btcwallet_address',
-    		'btcwallet_name':'btcwallet_name'
-    	},
+        'users_to_btcwallets':{
+        	'table_name':'users_to_btcwallets',
+        	'user_id':'user_id',
+        	'btcwallet_id':'btcwallet_id'
+        },
+        'btcwallets':{
+        	'table_name':'btcwallets',
+        	'btcwallet_id':'btcwallet_id',
+        	'btcwallet_address':'btcwallet_address',
+        	'btcwallet_name':'btcwallet_name'
+        },
     	'capitalization_factors':{
     		'table_name':'capitalization_factors',
     		'factor_id':'factor_id',
