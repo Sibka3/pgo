@@ -43,7 +43,7 @@ app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: 'keyboard cat',
   cookie: {
-    maxAge: 30*60*1000
+    maxAge: 180*60*1000
   },
   resave: true,
   saveUninitialized: false }));
