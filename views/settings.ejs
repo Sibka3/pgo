@@ -75,15 +75,10 @@
 <!-- mail pswd koshelek firstname lastname -->
 <div class="content-wrapper">
     <div class="container-fluid" style="margin-top: 3vh;">
-        <script>
+        <!-- <script>
           var getTemp = 0;
           getTemp = <%= message %>;
-          if(getTemp===5){
-            document.write('<div class="alert alert-danger">');
-            document.write('<strong>Такой id не существует!<\/strong>');
-            document.write('<\/div>');
-          }
-          else if(getTemp===7){
+          if(getTemp===7){
             document.write('<div class="alert alert-success">');
             document.write('<strong>Имя успешно изменено!<\/strong>');
             document.write('<\/div>');
@@ -98,7 +93,7 @@
             document.write('<strong>Имя и фамилия успешно изменены!<\/strong>');
             document.write('<\/div>');
           }
-        </script>
+        </script> -->
         <form action="change_name" method="post">
             <div class="form-group">
                 <div class="form-row">
@@ -114,17 +109,12 @@
                 </div>
             </div>
         </form>
-        <script>
+        <!-- <script>
           var getTemp = 0;
           getTemp = <%= message %>;
           if(getTemp===1){
             document.write('<div class="alert alert-danger">');
             document.write('<strong>Введите email!<\/strong>');
-            document.write('<\/div>');
-          }
-          else if(getTemp===2){
-            document.write('<div class="alert alert-danger">');
-            document.write('<strong>Такой id не существует!<\/strong>');
             document.write('<\/div>');
           }
           else if(getTemp===3){
@@ -137,7 +127,7 @@
             document.write('<strong>Email успешно изменен!<\/strong>');
             document.write('<\/div>');
           }
-        </script>
+        </script> -->
         <form action="change_email" method="post">
             <div class="form-group" style="margin-top: 2vh;">
                 <div class="form-row">
@@ -149,7 +139,7 @@
                 </div>
             </div>
         </form>
-        <script>
+        <!-- <script>
           var getTemp = 0;
           getTemp = <%= message %>;
           if(getTemp===10){
@@ -172,7 +162,7 @@
             document.write('<strong>Пароль успешно изменен!<\/strong>');
             document.write('<\/div>');
           }
-        </script>
+        </script> -->
         <form action="change_pswd" method="post">
             <div class="form-group" style="margin-top: 2vh;">
                 <div class="form-row">
@@ -212,22 +202,32 @@
                     <button type="submit" class="btn btn-primary btn-sm" style="cursor: pointer; "><span>Добавить</span></button>
                 </div>
             </form>
+            <script>
+              var getTemp = 0;
+              getTemp = <%= message %>;
+              if(getTemp===18){
+                document.write('<div class="alert alert-success">');
+                document.write('<strong>Кошелек удален!<\/strong>');
+                document.write('<\/div>');
+              }
+            </script>
             <div class="form-row">
                      <div class=" col-md-3 dropdown">
                         <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  style="margin-top: 10%; padding: .35rem .7rem;  cursor: pointer; ">
                            Ваши кошельки
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <form action="delete_wallet" method="post">
-                                <script>
-                                    <%for(var i=0;i< wallet.length;i++){%>
-                                        document.write('<a class="dropdown-item" href="#"><%= wallet[i].btcwallet_address %><\/a>');
-                                        document.write('<button class="close" type="button" data-dismiss="modal" aria-label="Close" style="margin-top: -30px; padding-right: 4px; outline: none;">');
-                                        document.write('<span aria-hidden="true" style="cursor: pointer;">×<\/span>');
-                                        document.write('<\/button>');
-                                    <%}%>
-                                </script>
-                            </form>
+                        <script>
+                        <%for(var i=0;i< wallet.length;i++){%>
+                            document.write('<form action="delete_wallet" method="post">');
+                            document.write('<a class="dropdown-item" name="delete_wallet<%=i%>" href="#"><%= wallet[i].btcwallet_address %><\/a>');
+                            document.write('<input type="hidden" name="wallet" value=<%=i%>>');
+                            document.write('<button class="close" type="submit" data-dismiss="modal" aria-label="Close" style="margin-top: -30px; padding-right: 4px; outline: none;">');
+                            document.write('<span aria-hidden="true" style="cursor: pointer;">×<\/span>');
+                            document.write('<\/button>');
+                            document.write('<\/form>');
+                        <%}%>
+                        </script>
                         </div>
                      </div>
                 </div>

@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt');
 var Strategy = require('passport-local').Strategy;
 var db = require('./db');
 var flash    = require('connect-flash');
+const url = require('url');  
 
 passport.use(new Strategy(
     function(username, password, cb) {
@@ -109,8 +110,8 @@ app.get('/settings',
     //req.session.regenerate(function(err){});
     db.tables.displayUser(req.session.passport.user,function (err, us) {
       db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
-        var code=req.body.code;
-        if(!req.body.code)
+        var code=req.query.message;
+        if(!code)
           code=0;
         res.render('settings', {user:us, message:code, wallet:us1});
       });
@@ -168,7 +169,12 @@ app.post('/change_name',
             res.render('settings', {user:us, message:0});
           }
           else {
-            res.render('settings', {user:us, message:user, wallet:us1});
+            res.redirect(url.format({
+             pathname:"/settings",
+             query: {
+                "message": user
+              }
+            }));
           }
         });
       });
@@ -186,7 +192,12 @@ app.post('/change_email',
             res.render('settings', {user:us, message:0});
           }
           else {
-            res.render('settings', {user:us, message:user, wallet:us1});
+            res.redirect(url.format({
+             pathname:"/settings",
+             query: {
+                "message": user
+              }
+            }));
           }
         });
       });
@@ -204,7 +215,12 @@ app.post('/change_pswd',
             res.render('settings', {user:us, message:0});
           }
           else {
-            res.render('settings', {user:us, message:user, wallet:us1});
+            res.redirect(url.format({
+             pathname:"/settings",
+             query: {
+                "message": user
+              }
+            }));
           }
         });
       });
@@ -222,7 +238,12 @@ app.post('/add_wallet',
             res.render('settings', {user:us, message:0});
           }
           else {
-            res.render('settings', {user:us, message:user, wallet:us1});
+            res.redirect(url.format({
+             pathname:"/settings",
+             query: {
+                "message": user
+              }
+            }));
           }
         });
       });
@@ -232,8 +253,24 @@ app.post('/add_wallet',
 app.post('/delete_wallet',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    req.session.regenerate(function(err){});
-    res.render('settings', {message:0});
+    db.tables.displayUser(req.session.passport.user, function (err, us) {
+      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+        db.tables.deleteBtcWallet(us1[req.body.wallet], function(err, user){
+          if(err){
+            console.log(err);
+            res.render('settings', {user:us, message:0});
+          }
+          else {
+            res.redirect(url.format({
+             pathname:"/settings",
+             query: {
+                "message": user
+              }
+            }));
+          }
+        });
+      });
+    });
   });
 
 app.get('/*',

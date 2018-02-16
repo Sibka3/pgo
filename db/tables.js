@@ -106,7 +106,7 @@ exports.addBtcWallet = function(wallet, id, cb) {
     if(rows.length){
       return cb(null, 16);//Кошелек существует в системе
     }
-    var insertQuery = "INSERT INTO "+dbconfig.tables.btcwallets.table_name+" ( "+dbconfig.tables.btcwallets.btcwallet_address+" ) values ( "+wallet+" );";
+    var insertQuery = "INSERT INTO "+dbconfig.tables.btcwallets.table_name+" ( "+dbconfig.tables.btcwallets.btcwallet_address+" ) values ( '"+wallet+"' );";
     connection.query(insertQuery, function(err, rows) {
       if(err) {
         console.log(err);
@@ -122,6 +122,25 @@ exports.addBtcWallet = function(wallet, id, cb) {
       });
     });
   });
+};
+
+exports.deleteBtcWallet = function(wallet, cb) {
+  //if(!wallet){
+  //  return cb(null, 15); //Пустой кошелек
+  //}
+  var insertQuery = "\
+    delete usrs.* from \
+    "+dbconfig.tables.users_to_btcwallets.table_name+" \
+    as usrs inner join "+dbconfig.tables.btcwallets.table_name+" \
+    as btc on btc."+dbconfig.tables.btcwallets.btcwallet_id+"=\
+    usrs."+dbconfig.tables.users_to_btcwallets.btcwallet_id+" \
+    where btc."+dbconfig.tables.btcwallets.btcwallet_address+"='"+wallet.btcwallet_address+"';";
+    connection.query(insertQuery, function(err, rows){
+      if(err){
+        cb(err, null);
+      }
+      return cb(null, 18);
+    });
 };
 
 exports.changePassword = function(old_pswd, new_pswd, id, cb) {
