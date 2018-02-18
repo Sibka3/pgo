@@ -32,6 +32,18 @@
     <div class="card card-login mx-auto mt-5">
       <div class="card-header">Вход</div>
       <div class="card-body">
+       <script>
+          var getTemp = <%= message %>;
+          if(getTemp===1){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Пожалуйста, подтвердите свой адрес электронной почты!<\/strong>');
+            document.write('<\/div>');
+          }else if(getTemp===2){
+            document.write('<div class="alert alert-success">');
+            document.write('<strong>Пожалуйста, проверьте свой адрес электронной почты!<\/strong>');
+            document.write('<\/div>');
+          }
+        </script>
         <form action="login" method="post">
         <!--<form id = 'auth-form'>-->
           <div class="form-group">

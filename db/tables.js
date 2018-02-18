@@ -1,13 +1,19 @@
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
+var crypyo = require('crypto');
 var dbconfig = require('./database.js');
 var connection = mysql.createConnection(dbconfig.connection);
 
 connection.query('USE ' + dbconfig.database);
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.findById = function(id, cb) {
   process.nextTick(function() {
-    connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.id+" = '"+id+"'", function(err, rows){
+    connection.query("SELECT * FROM \
+      "+dbconfig.tables.users.table_name+" \
+      WHERE "+dbconfig.tables.users.id+" = \
+      '"+id+"'", function(err, rows){
         if (err)
           return cb(null, null);
         if (rows[0]) {
@@ -26,10 +32,15 @@ exports.findById = function(id, cb) {
     })
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.findByUsername = function(username, cb) {
   process.nextTick(function() {
-    connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.email+" = ?",username, function(err, rows){
+    connection.query("SELECT * FROM \
+      "+dbconfig.tables.users.table_name+" \
+      WHERE "+dbconfig.tables.users.email+" \
+      = ?",username, function(err, rows){
         if (err)
             return cb(null, null);
         if (rows[0]) {
@@ -47,83 +58,126 @@ exports.findByUsername = function(username, cb) {
     })
   });
 };
-
-exports.addUser = function(username, password, cb) {
-  connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.email+" = '"+username+"';", function(err, rows) {
-    if (err)
-     return cb(err, null);
-    if(!username || !password){
-      return cb('2', null);
-    }
-    if (rows.length) {
-      return cb('1', null);
-    } else {
-      bcrypt.hash(password, 10, function(err, hash) {
-        password=hash;
-        var email = username;
-        var newUserMysql = {email, password};
-        var insertQuery = "INSERT INTO "+dbconfig.tables.users.table_name+" ( "+dbconfig.tables.users.email+", "+dbconfig.tables.users.password+" ) values (?,?);";
-        connection.query(insertQuery,[newUserMysql.email, newUserMysql.password],function(err, rows) {
-          if(err) console.log(err);
-          newUserMysql.id = rows.insertId;
-          return cb(null, newUserMysql);
-        });
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+exports.addUser = function(key, cb) {
+  var query = "select * from \
+    "+dbconfig.tables.key_email_pass.table_name+" \
+    where "+dbconfig.tables.key_email_pass.user_key+"= \
+    '"+key+"' ;";
+  connection.query(query, function(err, rows){
+    if(err) console.log(err);
+    if(!rows.length)
+      return cb(null, 1); //ключ невалидный
+    var email = rows[0][dbconfig.tables.key_email_pass.user_email];
+    var password = rows[0][dbconfig.tables.key_email_pass.user_pass_hash];
+    var insertQuery = "INSERT INTO \
+    "+dbconfig.tables.users.table_name+" \
+    ( "+dbconfig.tables.users.email+", \
+    "+dbconfig.tables.users.password+" \
+    ) values (?,?);";
+    connection.query(insertQuery,[email, password],
+      function(err, rows1) {
+      if(err) console.log(err);
+      var removeQuery = "delete from \
+      "+dbconfig.tables.key_email_pass.table_name+" \
+      where "+dbconfig.tables.key_email_pass.user_key+"=\
+      '"+key+"';";
+      connection.query(removeQuery, function(err, rows2){
+        if(err) console.log(err);
+        return cb(null, 2);
       });
-    }
+    });
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.changeEmail = function(username, id, cb) {
-  connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.id+" = '"+id+"';", function(err, rows) {
-    if (err){
-      console.log(err);
-      return cb(err, null);
-    }
-    if(!username){
-      return cb(null, 0); //Емейл пустой
-    }
-    if (!rows.length) {
-      return cb(null,2); //Что-то пошло не так, id не существует
-    } else {
-      connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.email+" = '"+username+"';", function(err, rows){
-        if(rows.length)
-          return cb(null,3);
-        var insertQuery = "UPDATE "+dbconfig.tables.users.table_name+" SET "+dbconfig.tables.users.email+"='"+username+"' WHERE "+dbconfig.tables.users.id+"="+id+";";
-        connection.query(insertQuery,function(err, rows) {
-          if(err) console.log(err);
-          return cb(null,4); //Успешно
-        });
-      });
-    }
+  if(!username)
+    return cb(null, 0); //Емейл пустой
+
+  connection.query("SELECT * FROM \
+    "+dbconfig.tables.users.table_name+" \
+    WHERE "+dbconfig.tables.users.email+" = \
+    '"+username+"';", function(err, rows){
+    if(rows.length)
+      return cb(null,3);
+    var insertQuery = "UPDATE \
+    "+dbconfig.tables.users.table_name+" \
+    SET "+dbconfig.tables.users.email+"=\
+    '"+username+"' WHERE \
+    "+dbconfig.tables.users.id+"="+id+";";
+    connection.query(insertQuery,function(err, rows) {
+      if(err) console.log(err);
+      return cb(null,4); //Успешно
+    });
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.addBtcWallet = function(wallet, id, cb) {
   if(!wallet){
     return cb(null, 15); //Пустой кошелек
   }
-  connection.query("SELECT * FROM "+dbconfig.tables.btcwallets.table_name+" WHERE "+dbconfig.tables.btcwallets.btcwallet_address+" = '"+wallet+"';", function(err, rows) {
+  connection.query("SELECT * FROM \
+    "+dbconfig.tables.btcwallets.table_name+" WHERE \
+    "+dbconfig.tables.btcwallets.btcwallet_address+" \
+    = '"+wallet+"';", function(err, rows) {
     if(rows.length){
-      return cb(null, 16);//Кошелек существует в системе
+      connection.query("SELECT * FROM \
+        "+dbconfig.tables.users_to_btcwallets.table_name+" WHERE \
+        "+dbconfig.tables.users_to_btcwallets.btcwallet_id+" \
+        = '"+rows[0][dbconfig.tables.btcwallets.btcwallet_id]+"\
+        ';", function(err, rows1){
+        if(rows1.length){
+          return cb(null, 16);//Кошелек существует в системе
+        }
+        var insertQuery = "INSERT INTO \
+        "+dbconfig.tables.users_to_btcwallets.table_name+" \
+        ( "+dbconfig.tables.users_to_btcwallets.btcwallet_id+", \
+        "+dbconfig.tables.users_to_btcwallets.user_id+" \
+        ) values ( "+rows[0][dbconfig.tables.btcwallets.btcwallet_id]+", "+id+" );";
+        connection.query(insertQuery, function(err, rows) {
+          if(err) {
+            console.log(err);
+            return cb(err, null);
+          }
+          return cb(null, 17); //Успешно
+        });
+      });
     }
-    var insertQuery = "INSERT INTO "+dbconfig.tables.btcwallets.table_name+" ( "+dbconfig.tables.btcwallets.btcwallet_address+" ) values ( '"+wallet+"' );";
-    connection.query(insertQuery, function(err, rows) {
-      if(err) {
-        console.log(err);
-        return cb(err, null);
-      }
-      var insertQuery = "INSERT INTO "+dbconfig.tables.users_to_btcwallets.table_name+" ( "+dbconfig.tables.users_to_btcwallets.btcwallet_id+", "+dbconfig.tables.users_to_btcwallets.user_id+" ) values ( "+rows.insertId+", "+id+" );";
+    else{
+      var insertQuery = "INSERT INTO \
+      "+dbconfig.tables.btcwallets.table_name+" \
+      ( "+dbconfig.tables.btcwallets.btcwallet_address+" \
+      ) values ( '"+wallet+"' );";
       connection.query(insertQuery, function(err, rows) {
         if(err) {
           console.log(err);
           return cb(err, null);
         }
-        return cb(null, 17); //Успешно
-      });
-    });
+        var insertQuery = "INSERT INTO \
+        "+dbconfig.tables.users_to_btcwallets.table_name+" \
+        ( "+dbconfig.tables.users_to_btcwallets.btcwallet_id+", \
+        "+dbconfig.tables.users_to_btcwallets.user_id+" \
+        ) values ( "+rows.insertId+", "+id+" );";
+        connection.query(insertQuery, function(err, rows) {
+          if(err) {
+            console.log(err);
+            return cb(err, null);
+          }
+          return cb(null, 17); //Успешно
+        });
+      }); 
+    }
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.deleteBtcWallet = function(wallet, cb) {
   //if(!wallet){
   //  return cb(null, 15); //Пустой кошелек
@@ -134,7 +188,8 @@ exports.deleteBtcWallet = function(wallet, cb) {
     as usrs inner join "+dbconfig.tables.btcwallets.table_name+" \
     as btc on btc."+dbconfig.tables.btcwallets.btcwallet_id+"=\
     usrs."+dbconfig.tables.users_to_btcwallets.btcwallet_id+" \
-    where btc."+dbconfig.tables.btcwallets.btcwallet_address+"='"+wallet.btcwallet_address+"';";
+    where btc."+dbconfig.tables.btcwallets.btcwallet_address+"=\
+    '"+wallet[dbconfig.tables.btcwallets.btcwallet_address]+"';";
     connection.query(insertQuery, function(err, rows){
       if(err){
         cb(err, null);
@@ -142,9 +197,14 @@ exports.deleteBtcWallet = function(wallet, cb) {
       return cb(null, 18);
     });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.changePassword = function(old_pswd, new_pswd, id, cb) {
-  connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.id+" = '"+id+"';", function(err, rows) {
+  connection.query("SELECT * FROM \
+    "+dbconfig.tables.users.table_name+" \
+    WHERE "+dbconfig.tables.users.id+" = \
+    '"+id+"';", function(err, rows) {
     if (err){
       console.log(err);
       return cb(err, null);
@@ -160,7 +220,10 @@ exports.changePassword = function(old_pswd, new_pswd, id, cb) {
     if(!bcrypt.compareSync(old_pswd, rows[0][dbconfig.tables.users.password]))
       return cb(null, 12); //Пароли не совпадают
     bcrypt.hash(new_pswd, 10, function(err, hash){
-      var insertQuery = "UPDATE "+dbconfig.tables.users.table_name+" SET "+dbconfig.tables.users.password+"='"+hash+"' WHERE "+dbconfig.tables.users.id+"="+id+";";
+      var insertQuery = "UPDATE \
+      "+dbconfig.tables.users.table_name+" \
+      SET "+dbconfig.tables.users.password+"=\
+      '"+hash+"' WHERE "+dbconfig.tables.users.id+"="+id+";";
       connection.query(insertQuery,function(err, rows) {
         if(err) console.log(err);
         return cb(null,13); //Успешно
@@ -168,64 +231,62 @@ exports.changePassword = function(old_pswd, new_pswd, id, cb) {
     });
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.changeName = function(first_name, last_name, id, cb) {
-  connection.query("SELECT * FROM "+dbconfig.tables.users.table_name+" WHERE "+dbconfig.tables.users.id+" = '"+id+"';", function(err, rows) {
-    if (err){
-      console.log(err);
-      return cb(err, null);
+  let promise1 = new Promise((resolve, reject) => {
+    var i=0;
+    if(first_name){
+      var insertQuery = "UPDATE \
+      "+dbconfig.tables.users.table_name+" \
+      SET "+dbconfig.tables.users.first_name+"\
+      ='"+first_name+"' WHERE \
+      "+dbconfig.tables.users.id+"="+id+";";
+      connection.query(insertQuery,function(err, rows) {
+        if(err) console.log(err);
+        i+=1;
+        resolve(i);
+      });
     }
-    let promise1 = new Promise((resolve, reject) => {
-      var i=0;
-      if(first_name){
-        if (!rows.length) {
-          return cb(null,5); //Что-то пошло не так, id не существует
-        } else {
-          var insertQuery = "UPDATE "+dbconfig.tables.users.table_name+" SET "+dbconfig.tables.users.first_name+"='"+first_name+"' WHERE "+dbconfig.tables.users.id+"="+id+";";
-          connection.query(insertQuery,function(err, rows) {
-            if(err) console.log(err);
-            i+=1;
-            resolve(i);
-          });
-        }
-      }
-      else
-        resolve(i);
-    });
-    let promise2 = new Promise((resolve, reject) => {
-      var i=0;
-      if(last_name){
-        if (!rows.length) {
-          return cb(null,5); //Что-то пошло не так, id не существует
-        } else {
-          var insertQuery = "UPDATE "+dbconfig.tables.users.table_name+" SET "+dbconfig.tables.users.last_name+"='"+last_name+"' WHERE "+dbconfig.tables.users.id+"="+id+";";
-          connection.query(insertQuery,function(err, rows) {
-            if(err) console.log(err);
-            i+=2;
-            resolve(i);
-          });
-        }
-      }
-      else
-        resolve(i);
-    });
-    var i=6;
-    promise1
-      .then(
-        result => {
-          i+=result;
-          promise2
-            .then(
-              result => {
-                i+=result;
-                return cb(null, i);
-              }
-            );
-        }
-      ); 
+    else
+      resolve(i);
   });
+  let promise2 = new Promise((resolve, reject) => {
+    var i=0;
+    if(last_name){
+      var insertQuery = "UPDATE \
+      "+dbconfig.tables.users.table_name+" \
+      SET "+dbconfig.tables.users.last_name+"\
+      ='"+last_name+"' WHERE \
+      "+dbconfig.tables.users.id+"="+id+";";
+      connection.query(insertQuery,function(err, rows) {
+        if(err) console.log(err);
+        i+=2;
+        resolve(i);
+      });
+    }
+    else
+      resolve(i);
+  });
+  var i=6;
+  promise1
+    .then(
+      result => {
+        i+=result;
+        promise2
+          .then(
+            result => {
+              i+=result;
+              return cb(null, i);
+            }
+          );
+      }
+    ); 
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.displayUser = function(user, cb) {
   exports.findById(user,function (err, user1) {
     if (err) { return cb(err, null); }
@@ -243,7 +304,9 @@ exports.displayUser = function(user, cb) {
   return cb(null, us);
   });
 };
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 exports.displayBtcWallets = function(id, cb) {
   var insertQuery = "\
     select btc."+dbconfig.tables.btcwallets.btcwallet_address+"\
@@ -260,5 +323,110 @@ exports.displayBtcWallets = function(id, cb) {
     if(!rows.length)
       return cb(null, 18);
     return cb(null, rows);
+  });
+};
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+exports.addConfirmKey = function(username, password, cb) {
+  if(!username || !password)
+    return cb(null, 2);
+  var query = "SELECT * from \
+    "+dbconfig.tables.users.table_name+" \
+    where "+dbconfig.tables.users.email+" = \
+    '"+username+"';";
+    connection.query(query, function(err, rows) {
+      if(err) console.log(err);
+      if(rows.length)
+        return cb(null, 0); //емейл уже есть в базе
+      bcrypt.hash(password, 10, function(err, hash) {
+        require('crypto').randomBytes(48, function(ex, buf) {
+          token = buf.toString('base64').replace(/\//g,'_').replace(/\+/g,'-');
+          var insertQuery = " insert into \
+          "+dbconfig.tables.key_email_pass.table_name+" \
+          ("+dbconfig.tables.key_email_pass.user_email+", \
+          "+dbconfig.tables.key_email_pass.user_pass_hash+", \
+          "+dbconfig.tables.key_email_pass.user_key+") \
+          values ('"+username+"', '"+hash+"', '"+token+"') \
+          on duplicate key update \
+          "+dbconfig.tables.key_email_pass.user_email+"='"+username+"', \
+          "+dbconfig.tables.key_email_pass.user_key+"='"+token+"';";
+          connection.query(insertQuery,function(err, rows){
+            if(err) console.log(err);
+            return cb(null, token);
+          });
+        });
+      });
+    });
+};
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+exports.addRecoveryKey = function(username, cb) {
+  if(!username)
+    return cb(null, 0); //пустой емейл
+  var query = "SELECT * from \
+    "+dbconfig.tables.users.table_name+" \
+    where "+dbconfig.tables.users.email+" = \
+    '"+username+"';";
+    connection.query(query, function(err, rows) {
+      if(err) console.log(err);
+      if(!rows.length)
+        return cb(null, 1); //емейла нет в базе
+      require('crypto').randomBytes(48, function(ex, buf) {
+        token = buf.toString('base64').replace(/\//g,'_').replace(/\+/g,'-');
+        var insertQuery = " insert into \
+        "+dbconfig.tables.key_email.table_name+" \
+        ("+dbconfig.tables.key_email.user_email+", \
+        "+dbconfig.tables.key_email.user_key+") \
+        values ('"+username+"', '"+token+"') \
+        on duplicate key update \
+        "+dbconfig.tables.key_email.user_email+"='"+username+"', \
+        "+dbconfig.tables.key_email.user_key+"='"+token+"';";
+        connection.query(insertQuery,function(err, rows){
+          if(err) console.log(err);
+          return cb(null, token);
+        });
+      });
+    });
+};
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+exports.generateNewPass = function(key, cb) {
+  var query = "select * from \
+    "+dbconfig.tables.key_email.table_name+" \
+    where "+dbconfig.tables.key_email.user_key+"= \
+    '"+key+"' ;";
+  connection.query(query, function(err, rows){
+    if(err) console.log(err);
+    if(!rows.length)
+      return cb(null, 1); //ключ невалидный
+    require('crypto').randomBytes(48, function(ex, buf) {
+      token = buf.toString('base64').replace(/\//g,'_').replace(/\+/g,'-');
+      var email = rows[0][dbconfig.tables.key_email.user_email];
+      var password = token;
+      bcrypt.hash(password, 10, function(err, hash) {
+        var insertQuery = "INSERT INTO \
+        "+dbconfig.tables.users.table_name+" \
+        ( "+dbconfig.tables.users.email+", \
+        "+dbconfig.tables.users.password+" \
+        ) values (?,?) on duplicate key update \
+        "+dbconfig.tables.users.email+"='"+email+"', \
+        "+dbconfig.tables.users.password+"='"+hash+"';";
+        connection.query(insertQuery,[email, hash],
+          function(err, rows1) {
+          if(err) console.log(err);
+          var removeQuery = "delete from \
+          "+dbconfig.tables.key_email.table_name+" \
+          where "+dbconfig.tables.key_email.user_key+"=\
+          '"+key+"';";
+          connection.query(removeQuery, function(err, rows2){
+            if(err) console.log(err);
+            return cb(email, password);
+          });
+        });
+      });
+    });
   });
 };

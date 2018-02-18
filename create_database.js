@@ -31,9 +31,22 @@ CREATE TABLE `users_to_btcwallets` (\
 )');
 
 connection.query('\
+CREATE TABLE `key_email_pass` (\
+	`user_email` varchar(255) NOT NULL UNIQUE,\
+	`user_pass_hash` varchar(255) NOT NULL,\
+	`user_key` varchar(255) NOT NULL\
+)');
+
+connection.query('\
+CREATE TABLE `key_email` (\
+	`user_email` varchar(255) NOT NULL UNIQUE,\
+	`user_key` varchar(255) NOT NULL\
+)');
+
+connection.query('\
 CREATE TABLE `btcwallets` (\
 	`btcwallet_id` INT NOT NULL AUTO_INCREMENT,\
-	`btcwallet_address` varchar(255) NOT NULL,\
+	`btcwallet_address` varchar(255) NOT NULL UNIQUE,\
 	`btcwallet_name` varchar(255),\
 	PRIMARY KEY (`btcwallet_id`)\
 )');

@@ -6,6 +6,7 @@ var Strategy = require('passport-local').Strategy;
 var db = require('./db');
 var flash    = require('connect-flash');
 const url = require('url');  
+var nodemailer = require('nodemailer');
 
 passport.use(new Strategy(
     function(username, password, cb) {
@@ -18,11 +19,15 @@ passport.use(new Strategy(
             });
         }
   ));
-// In order to restore authentication state across HTTP requests, Passport needs
-// to serialize users into and deserialize users out of the session.  The
-// typical implementation of this is as simple as supplying the user ID when
-// serializing, and querying the user record by ID from the database when
-// deserializing.
+
+var transporter = nodemailer.createTransport({
+ service: 'gmail',
+ auth: {
+        user: 'privateglobaloffshore@gmail.com',
+        pass: 'Vf5dVKTR7t7k6Ce5VBLTt89'
+    }
+});
+
 passport.serializeUser(function(user, cb) {
   cb(null, user.id);
 });
@@ -57,7 +62,10 @@ app.use(passport.session());
 // Define routes.
 app.get('/login',
   function(req, res){
-    res.render('login');
+    var message = req.query.message;
+    if(!message)
+      message=0;
+    res.render('login', {message:message});
   });
   
 app.post('/login', 
@@ -76,7 +84,9 @@ app.get('/',
   function(req, res){
     res.render('index');
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.get('/personal',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
@@ -85,7 +95,9 @@ app.get('/personal',
       res.render('personal', {user:us});
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.get('/outcoming',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
@@ -94,7 +106,9 @@ app.get('/outcoming',
       res.render('outcoming', {user:us});
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.get('/incoming',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
@@ -103,13 +117,16 @@ app.get('/incoming',
       res.render('incoming', {user:us});
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.get('/settings',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     //req.session.regenerate(function(err){});
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
         var code=req.query.message;
         if(!code)
           code=0;
@@ -120,50 +137,97 @@ app.get('/settings',
 
 app.get('/forgot-password',
   function(req, res) {
+    var message=req.query.key;
     res.render('forgot-password');
   });
 
 app.post('/forgot-password',
   function(req, res) {
-    res.redirect('/login');
+    db.tables.addRecoveryKey(req.body.email, function(err, user){
+      if(user===0)
+        res.render('forgot-password',{message:0}); //пустое пооле
+      else if(user===1)
+        res.render('forgot-password',{message:1}); //нет емейла в базе
+      else{
+        transporter.sendMail({
+          from: 'privateglobaloffshore@gmail.com', // sender address
+          to: req.body.email, // list of receivers
+          subject: 'Please reset your password', // Subject line
+          html: '<a href="http://localhost:3000/restorepass?key='+user+'">Сброс пароля</a>'// plain text body\
+          }, function (err, info) {
+          if(err)
+            console.log(err)
+        });
+        res.redirect(url.format({
+         pathname:"/login",
+         query: {
+            "message": 2
+          }
+        }));
+      }
+    });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.get('/register',
   function(req, res) {
     res.render('register', {message:0});
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/register',
   function(req, res) {
     if(req.body.password!=req.body.password1){
       res.render('register', {message:1});
     }
     else{
-      db.tables.addUser(req.body.email, req.body.password, function(err, user){
-        if(err==='1'){
+      db.tables.addConfirmKey(req.body.username, req.body.password,
+       function(err, user){
+        if(user===0){
           res.render('register', {message:2});
         }
-        else if(err==='2'){
+        else if(user===2){
           res.render('register', {message:3});
         }
         else{
-          res.redirect('/login');
+          transporter.sendMail({
+            from: 'privateglobaloffshore@gmail.com', // sender address
+            to: req.body.username, // list of receivers
+            subject: 'Please confirm your email address', // Subject line
+            html: '<a href="http://localhost:3000/confirmemail?key='+user+'">Подтвердить регистрацию</a>'// plain text body\
+            }, function (err, info) {
+            if(err)
+              console.log(err)
+          });
+          res.redirect(url.format({
+             pathname:"/login",
+             query: {
+                "message": 1
+              }
+            }));
         }
       });
     }
   });
 
+
 app.get('/index',
   function(req, res) {
     res.redirect('/');
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/change_name',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
-        db.tables.changeName(req.body.first_name, req.body.last_name, req.session.passport.user, function(err, user){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
+        db.tables.changeName(req.body.first_name, req.body.last_name,
+         req.session.passport.user, function(err, user){
           if(err){
             console.log(err);
             res.render('settings', {user:us, message:0});
@@ -180,13 +244,17 @@ app.post('/change_name',
       });
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/change_email',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user,function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
-        db.tables.changeEmail(req.body.email, req.session.passport.user, function(err, user){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
+        db.tables.changeEmail(req.body.email, req.session.passport.user,
+         function(err, user){
           if(err){
             console.log(err);
             res.render('settings', {user:us, message:0});
@@ -203,13 +271,17 @@ app.post('/change_email',
       });
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/change_pswd',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user, function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
-        db.tables.changePassword(req.body.old_pswd, req.body.new_pswd, req.session.passport.user, function(err, user){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
+        db.tables.changePassword(req.body.old_pswd, req.body.new_pswd,
+         req.session.passport.user, function(err, user){
           if(err){
             console.log(err);
             res.render('settings', {user:us, message:0});
@@ -226,13 +298,17 @@ app.post('/change_pswd',
       });
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/add_wallet',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user, function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
-        db.tables.addBtcWallet(req.body.wallet, req.session.passport.user, function(err, user){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
+        db.tables.addBtcWallet(req.body.wallet, req.session.passport.user,
+         function(err, user){
           if(err){
             console.log(err);
             res.render('settings', {user:us, message:0});
@@ -249,12 +325,15 @@ app.post('/add_wallet',
       });
     });
   });
-
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
 app.post('/delete_wallet',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
     db.tables.displayUser(req.session.passport.user, function (err, us) {
-      db.tables.displayBtcWallets(req.session.passport.user, function (err, us1){
+      db.tables.displayBtcWallets(req.session.passport.user,
+       function (err, us1){
         db.tables.deleteBtcWallet(us1[req.body.wallet], function(err, user){
           if(err){
             console.log(err);
@@ -272,6 +351,59 @@ app.post('/delete_wallet',
       });
     });
   });
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+app.get('/confirmemail', function(req, res){
+  //res.redirect('/');
+  var key=req.query.key;
+  if(!key){
+    res.redirect('/');
+  }
+  else{
+    db.tables.addUser(key, function(err, user){
+      if(user===1)
+        res.redirect('/');
+      else
+        res.redirect('/login');
+    });
+  }
+  //res.render('settings', {user:us, message:code, wallet:us1});
+});
+//./\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..../\..
+///..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\../..\.
+//....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\/....\
+app.get('/restorepass', function(req, res){
+  //res.redirect('/');
+  var key=req.query.key;
+  if(!key){
+    res.redirect('/');
+  }
+  else{
+    db.tables.generateNewPass(key, function(err, user){
+      if(user===1)
+        res.redirect('/');
+      else{
+        transporter.sendMail({
+          from: 'privateglobaloffshore@gmail.com', // sender address
+          to: err, // list of receivers
+          subject: 'Your new password', // Subject line
+          html: '<p> '+user+'</p>'// plain text body\
+          }, function (err, info) {
+          if(err)
+            console.log(err)
+        });
+        res.redirect(url.format({
+           pathname:"/login",
+           query: {
+              "message": 2
+            }
+          }));
+      }
+    });
+  }
+  //res.render('settings', {user:us, message:code, wallet:us1});
+});
 
 app.get('/*',
   function(req, res) {

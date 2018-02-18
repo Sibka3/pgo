@@ -42,6 +42,17 @@ module.exports = {
     		'table_name':'users_to_btctrans',
     		'user_id':'user_is',
     		'trans_id':'trans_id'
-    	}
+    	},
+        'key_email_pass':{
+            'table_name':'key_email_pass',
+            'user_email':'user_email',
+            'user_pass_hash':'user_pass_hash',
+            'user_key':'user_key'
+        },
+        'key_email':{
+            'table_name':'key_email',
+            'user_email':'user_email',
+            'user_key':'user_key'
+        }
     }
 };
