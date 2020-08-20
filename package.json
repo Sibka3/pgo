@@ -18,7 +18,7 @@
     "url": "https://github.com/passport/express-4.x-local-example/issues"
   },
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^5.0.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.13.3",
     "connect-ensure-login": "^0.1.1",
