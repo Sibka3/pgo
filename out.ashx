@@ -137,6 +137,11 @@ public class IndexList : IHttpHandler
                 R_OtherMsg += str;
             }
         }
+        catch (Exception ex)
+        {
+            R_Status = -9;
+            R_Msg = ex;
+        }
 
 
     }
