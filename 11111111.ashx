@@ -15,7 +15,7 @@ public class Card_OpenCard : APPBase.APPBase
     /// <summary>
     /// 翻牌次数
     /// </summary>
-    protected string opennum = 0;
+    protected string opennum = "0";
     /// <summary>
     /// 返回状态 0 正常 其他不正常
     /// </summary>
