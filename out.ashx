@@ -51,7 +51,6 @@ public class Card_OpenCard : APPBase.APPBase
         catch
         {
             R_Status = 101;
-            R_Msg = "输入参数不正确";
             return;
         }
         Utility.Oracle oracle = new Utility.Oracle();
